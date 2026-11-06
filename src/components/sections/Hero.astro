@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import titleImage from '@/assets/puppycravings_titulo.png';
+import Container from '@/components/layout/Container.astro';
+
+---
+
+<!-- El hero ocupa el alto restante de `main` (100vh - navbar) y centra el logo en vertical. El pt compensa (mt de Mission - alto del borde de nubes)
+      para que la distancia navbar → logo sea la misma que logo → siguiente sección. -->
+<section class="relative w-full min-h-[calc(100svh-5rem)] flex items-center pt-8 pb-12 md:pt-2 lg:pt-4 lg:pb-20">
+  <Container class="relative z-10 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-14 items-center">
+      <div class="lg:col-span-12 flex flex-col gap-6">
+        <h1>
+          <Image
+            src={titleImage}
+            alt="Puppy Cravings: premios gourmet horneados a mano con amor para colitas felices"
+            widths={[480, 768, 1024, 1280]}
+            sizes="(min-width: 1280px) 1024px, 90vw"
+            loading="eager"
+            class="enter-title mx-auto w-full max-w-4xl h-auto"
+          />
+        </h1>
+      </div>
+    </div>
+  </Container>
+</section>

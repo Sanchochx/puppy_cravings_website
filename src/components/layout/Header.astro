@@ -1,0 +1,22 @@
+---
+import BrandMark from './BrandMark.astro';
+import Container from './Container.astro';
+---
+
+<header
+  id="site-header"
+  class="enter-navbar fixed top-0 inset-x-0 z-50 bg-transparent transition-transform duration-300"
+>
+  <Container class="h-20 flex items-center justify-between gap-4 xl:gap-6">
+    <a href="#" aria-label="Puppy Cravings, inicio" class="group flex items-center min-h-11 min-w-11 shrink-0">
+      <BrandMark />
+    </a>
+  </Container>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = () => header?.classList.toggle('-translate-y-full', window.scrollY > 10);
+  window.addEventListener('scroll', toggle, { passive: true });
+  toggle();
+</script>

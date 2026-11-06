@@ -1,0 +1,229 @@
+/* TEMPORAL: Bricolage Grotesque (800) sustituye a Tropical Leaves hasta que el usuario entregue el archivo.
+   Al recibirlo: activar el @font-face de abajo y borrar este @import y "Bricolage Grotesque" de --font-display. */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&display=swap");
+@import "tailwindcss";
+
+/*
+  Tokens tomados de design/code.html. Donde DESIGN.md difiere prevalece code.html
+  (US-DSG-001): primary #4f2f83 (el manual de marca lo confirma), on-surface #231835 (DESIGN.md: #1b1c15) y
+  on-surface-variant #544666 (DESIGN.md: #4a4550).
+*/
+@theme {
+  --color-primary: #4f2f83;
+  --color-primary-hover: #3c2168;
+  --color-brand-yellow: #f8ed73;
+  --color-brand-lavender: #e6daed;
+  --color-brand-cream: #fffdf0;
+  --color-brand-cream-card: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-on-surface: #231835;
+  --color-on-surface-variant: #544666;
+
+  /* Escala de radios de la beta (v3): rounded, rounded-lg, rounded-xl y rounded-full.
+     rounded-2xl (1rem) y rounded-3xl (1.5rem) ya coinciden con los valores por defecto de v4. */
+  --radius: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-full: 9999px;
+
+  --font-display: "Tropical Leaves", "Bricolage Grotesque", sans-serif;
+  --font-body: "Helvetica Fam", Helvetica, Arial, sans-serif;
+
+  --shadow-header: 0 4px 20px -4px rgba(79, 47, 131, 0.08);
+  --shadow-whatsapp: 0 2px 8px rgba(79, 47, 131, 0.12);
+}
+
+/* Listo para activar cuando exista src/assets/fonts/TropicalLeaves.woff2 (Vite resuelve la ruta en build,
+   por eso no puede quedar declarado sin el archivo). Tropical Leaves tiene un solo peso: revisar font-black/font-extrabold.
+@font-face {
+  font-family: "Tropical Leaves";
+  src: url("../assets/fonts/TropicalLeaves.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Fondo único de toda la página: crema plano. Las secciones son transparentes para que se vea continuo. */
+  body {
+    overscroll-behavior: none;
+    background-color: var(--color-brand-cream);
+  }
+}
+
+/* Entrada al cargar: solo navbar y título del hero. Se anima `transform` (no `translate`)
+   para no chocar con el `-translate-y-full` que usa el header al hacer scroll. */
+@keyframes enter-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter-navbar {
+  animation: enter-down 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.enter-title {
+  animation: enter-scale 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter-navbar,
+  .enter-title {
+    animation: none;
+  }
+}
+
+/* Aparición al hacer scroll (sección Misión y Visión). Los elementos solo se ocultan si hay JS (`html.js`)
+   y el usuario no pidió reducir el movimiento; `.is-revealed` lo añade el IntersectionObserver una sola vez. */
+.highlight {
+  background-image: linear-gradient(var(--color-brand-yellow), var(--color-brand-yellow));
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+@keyframes reveal-left {
+  from { opacity: 0; transform: translateX(-40px) scale(0.92); }
+  65% { opacity: 1; transform: translateX(0) scale(1.05); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes reveal-right {
+  from { opacity: 0; transform: translateX(40px) scale(0.92); }
+  65% { opacity: 1; transform: translateX(0) scale(1.05); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes reveal-paw {
+  from { opacity: 0; transform: translateY(24px) rotate(-18deg) scale(0.8); }
+  60% { opacity: 1; transform: translateY(0) rotate(6deg) scale(1.08); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes reveal-dog {
+  from { opacity: 0; transform: translateY(60px); }
+  65% { opacity: 1; transform: translateY(0) scale(1.04); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes dog-wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal="dog"]:not(.is-revealed),
+  html.js [data-reveal="left"]:not(.is-revealed),
+  html.js [data-reveal="right"]:not(.is-revealed),
+  html.js [data-reveal="paw"]:not(.is-revealed) {
+    opacity: 0;
+  }
+
+  [data-reveal="left"].is-revealed {
+    animation: reveal-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) both;
+  }
+
+  [data-reveal="right"].is-revealed {
+    animation: reveal-right 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) both;
+  }
+
+  [data-reveal="dog"].is-revealed {
+    animation: reveal-dog 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Meneo rápido, una vez por hover/tap; el origen abajo lo hace pivotar sobre el suelo. */
+  .dog-wiggle {
+    transform-origin: 50% 100%;
+  }
+
+  .dog-wiggle:hover,
+  .dog-wiggle:active {
+    animation: dog-wiggle 0.5s ease-in-out 1;
+  }
+
+  [data-reveal="paw"].is-revealed {
+    animation: reveal-paw 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) both;
+  }
+
+  html.js [data-reveal="text"] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  }
+
+  html.js [data-reveal="text"].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* El resaltado se dibuja cuando el párrafo ya es visible (retraso del párrafo + 600 ms). */
+  html.js [data-reveal="text"] .highlight {
+    background-size: 0% 100%;
+    transition: background-size 0.8s cubic-bezier(0.22, 1, 0.36, 1)
+      calc(var(--reveal-delay, 0ms) + 600ms + var(--mark-extra, 0ms));
+  }
+
+  html.js [data-reveal="text"].is-revealed .highlight {
+    background-size: 100% 100%;
+  }
+
+  /* Cita: primero crece la barra, después aparece el texto. */
+  html.js [data-reveal="quote"] [data-quote-bar] {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html.js [data-reveal="quote"] [data-quote-text] {
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+  }
+
+  html.js [data-reveal="quote"].is-revealed [data-quote-bar] {
+    transform: none;
+  }
+
+  html.js [data-reveal="quote"].is-revealed [data-quote-text] {
+    opacity: 1;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-lavender);
+  border-radius: 4px;
+}

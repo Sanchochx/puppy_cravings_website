@@ -1,0 +1,24 @@
+---
+import { icons, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  filled?: boolean;
+}
+
+const { name, class: className, filled = false } = Astro.props;
+const path = icons[name][filled ? 'filled' : 'outline'];
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="1em"
+  height="1em"
+  fill="currentColor"
+  aria-hidden="true"
+  class:list={['inline-block shrink-0', className]}
+>
+  <path d={path}></path>
+</svg>

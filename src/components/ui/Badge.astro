@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+
+interface Props {
+  variant?: 'outline' | 'solid' | 'accent';
+  icon?: IconName;
+  /** Clases del icono, p. ej. para darle un color distinto al del texto. */
+  iconClass?: string;
+  uppercase?: boolean;
+  /** Para ajustar el padding (px-2.5 py-0.5, px-3.5 py-1.5, px-4 py-1.5) y otros detalles de cada uso. */
+  class?: string;
+}
+
+const { variant = 'outline', icon, iconClass, uppercase = false, class: className } = Astro.props;
+
+const variants = {
+  outline: 'gap-2 bg-brand-cream-card border border-brand-lavender shadow-sm',
+  solid: 'gap-2 bg-primary text-on-primary text-xs font-bold tracking-wider shadow-sm',
+  accent: 'gap-1.5 bg-brand-yellow text-primary font-bold',
+} as const;
+---
+
+<span class:list={['inline-flex items-center rounded-full', variants[variant], uppercase && 'uppercase', className]}>
+  {icon && <Icon name={icon} class={['text-sm', iconClass].filter(Boolean).join(' ')} />}
+  <slot />
+</span>

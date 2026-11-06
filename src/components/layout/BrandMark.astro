@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/puppycravings_logo.png';
+
+interface Props {
+  // Reemplaza el tamaño por defecto (no se mezcla, para no depender del orden de utilidades).
+  class?: string;
+}
+
+const { class: sizeClass = 'h-6 w-auto' } = Astro.props;
+---
+
+<Image
+  src={logo}
+  alt="Puppy Cravings"
+  widths={[96, 192]}
+  sizes="96px"
+  loading="eager"
+  class:list={['transition-transform group-hover:scale-105', sizeClass]}
+/>

@@ -1,0 +1,67 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'accent';
+  size?: 'md' | 'lg';
+  icon?: IconName;
+  iconPosition?: 'left' | 'right';
+  /** Clases del icono, p. ej. para darle un color distinto al del texto. */
+  iconClass?: string;
+  external?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconPosition = 'left',
+  iconClass,
+  external = false,
+  class: className,
+} = Astro.props;
+
+const variants = {
+  primary: 'bg-primary text-on-primary hover:bg-primary-hover',
+  accent: 'bg-brand-yellow text-primary font-bold',
+} as const;
+
+// La sombra depende de la combinación: en la beta el CTA primario lleva shadow-lg tintada y el amarillo shadow-md.
+const sizes = {
+  md: {
+    primary: 'gap-2 px-4 py-2.5 text-sm shadow-whatsapp hover:shadow-md',
+    accent: 'gap-2 px-4 py-2.5 text-sm shadow-whatsapp hover:shadow-md',
+  },
+  lg: {
+    primary:
+      'justify-center gap-2.5 px-8 py-4 text-base shadow-lg shadow-primary/20 hover:scale-[1.02] active:translate-y-0.5',
+    accent:
+      'justify-center gap-2.5 px-8 py-4 text-base shadow-md hover:scale-[1.02] active:translate-y-0.5',
+  },
+} as const;
+
+const iconSizes = { md: 'text-base', lg: 'text-xl' } as const;
+
+const Tag = href ? 'a' : 'button';
+const linkProps = href
+  ? { href, ...(external && { target: '_blank', rel: 'noopener noreferrer' }) }
+  : { type: 'button' as const };
+---
+
+<Tag
+  {...linkProps}
+  class:list={[
+    'inline-flex items-center rounded-full transition-all',
+    variants[variant],
+    sizes[size][variant],
+    className,
+  ]}
+>
+  {icon && iconPosition === 'left' && <Icon name={icon} class={[iconSizes[size], iconClass].filter(Boolean).join(' ')} />}
+  <slot />
+  {icon && iconPosition === 'right' && <Icon name={icon} class={[iconSizes[size], iconClass].filter(Boolean).join(' ')} />}
+</Tag>
